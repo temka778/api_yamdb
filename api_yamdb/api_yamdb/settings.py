@@ -1,3 +1,5 @@
+import os
+from datetime import timedelta
 from pathlib import Path
 
 
@@ -21,6 +23,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'reviews',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -39,7 +45,7 @@ TEMPLATES_DIR = BASE_DIR / 'templates'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],    # Здесь django будет искать шаблоны TEMPLATES_DIR
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -101,3 +107,50 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+SUPPORT_MAIL = 'support@yamdb.com'
+
+AUTH_USER_MODEL = 'reviews.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+CSV_FILE_PATH = os.path.join(BASE_DIR, 'static/data')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+RESERVED_USERNAMES = ('me',)
+VALID_USERNAME = r'[^\w.@+-]+'
+
+# Constants
+LIMIT_USERNAME = 150
+
+LIMIT_EMAIL = 254
+
+LIMIT_BIO = 300
+
+LIMIT_ROLE = 50
+
+LIMIT_NAME = 256
+
+LIMIT_SLUG = 50
+
+LEN_STR = 20
+
+MIN_VALUE = 1
+
+MAX_VALUE = 10
